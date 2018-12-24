@@ -12,6 +12,7 @@
 		C011DDAC1DD05F6200C510C1 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C011DDAA1DD05F6200C510C1 /* Main.storyboard */; };
 		C011DDAE1DD05F6200C510C1 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C011DDAD1DD05F6200C510C1 /* Assets.xcassets */; };
 		C011DDB11DD05F6200C510C1 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C011DDAF1DD05F6200C510C1 /* LaunchScreen.storyboard */; };
+		CB1A740221CC71F00037B935 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB1A740121CC71F00037B935 /* User.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -22,6 +23,7 @@
 		C011DDAD1DD05F6200C510C1 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		C011DDB01DD05F6200C510C1 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		C011DDB21DD05F6200C510C1 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		CB1A740121CC71F00037B935 /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -60,6 +62,7 @@
 				C011DDAD1DD05F6200C510C1 /* Assets.xcassets */,
 				C011DDAF1DD05F6200C510C1 /* LaunchScreen.storyboard */,
 				C011DDB21DD05F6200C510C1 /* Info.plist */,
+				CB1A740121CC71F00037B935 /* User.swift */,
 			);
 			path = GCDSamples;
 			sourceTree = "<group>";
@@ -138,6 +141,7 @@
 			files = (
 				C011DDA91DD05F6200C510C1 /* ViewController.swift in Sources */,
 				C011DDA71DD05F6200C510C1 /* AppDelegate.swift in Sources */,
+				CB1A740221CC71F00037B935 /* User.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -299,6 +303,7 @@
 				C011DDB71DD05F6200C510C1 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

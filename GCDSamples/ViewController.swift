@@ -7,66 +7,101 @@
 //
 
 import UIKit
+import Foundation
 
 class ViewController: UIViewController {
-
+    
     @IBOutlet weak var imageView: UIImageView!
+    var inactiveQueue: DispatchQueue!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
     }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
-
-
+    
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        
-        // Uncomment the following method call to test
-        
-        simpleQueues()
-        
-        // queuesWithQoS()
-        
-        /*
-         concurrentQueues()
-         if let queue = inactiveQueue {
-            queue.activate()
-         }
-         */
-        
-        // queueWithDelay()
-        
-        // fetchImage()
-        
-        // useWorkItem()
+//        self.globalQueues()
+//
+//        serialQueues()
+//
+//        queuesWithQoS()
+//
+//        concurrentQueues()
+//
+//        self.inactiveQueues()
+//        if let queue = inactiveQueue {
+//            queue.activate()
+//        }
+//
+//        queueWithDelay()
+//
+//        self.dispatchGroupQueues()
     }
     
-    
-    
-    func simpleQueues() {
-        let queue = DispatchQueue(label: "com.appcoda.myqueue")
-        
-        queue.async {
-            for i in 0..<10 {
-                print("🔴", i)
+    @IBAction func action(_ sender: Any) {
+        let anotherQueue2 = DispatchQueue(label: "com.appcoda", qos: .default, attributes: .concurrent)
+        anotherQueue2.sync {
+            for i in 100..<11000 {
+                print("🔵", i)
             }
         }
-        
-        for i in 100..<110 {
-            print("Ⓜ️", i)
+    }
+    
+    func globalQueues() {
+        DispatchQueue.global().sync {
+            for i in 0..<10 {
+                self.blueDot(index: i)
+            }
+        }
+        for i in 0..<10 {
+            self.redDot(index: i)
+        }
+    }
+    
+    func printFrom1To1000(){
+        for counter in 0..<1000{
+            print("Counter = \(counter) - Thread = \(Thread.current)")
+        }
+    }
+    
+    func serialQueues() {
+        let queue = DispatchQueue(label: "label")
+        queue.async {
+            for i in 0..<10 {
+                self.redDot(index: i)
+            }
+        }
+        queue.sync {
+            for i in 0..<10 {
+                self.blueDot(index: i)
+            }
         }
     }
     
     
+    private func blackDot(index: Int) {
+        print("⚫️", index)
+    }
+    
+    private func redDot(index: Int) {
+        print("🔴 ", index)
+    }
+    
+    private func blueDot(index: Int) {
+        print("Ⓜ️ ", index)
+    }
+    
     func queuesWithQoS() {
+        /* have 6 QoS
+         1.userInteractive
+         2.userInitiated
+         3.default
+         4.utility
+         5.background
+         6.uspecified
+        */
         let queue1 = DispatchQueue(label: "com.appcoda.queue1", qos: DispatchQoS.userInitiated)
-        // let queue1 = DispatchQueue(label: "com.appcoda.queue1", qos: DispatchQoS.background)
-        // let queue2 = DispatchQueue(label: "com.appcoda.queue2", qos: DispatchQoS.userInitiated)
         let queue2 = DispatchQueue(label: "com.appcoda.queue2", qos: DispatchQoS.utility)
         
         queue1.async {
@@ -80,46 +115,30 @@ class ViewController: UIViewController {
                 print("🔵", i)
             }
         }
-        
-        for i in 1000..<1010 {
-            print("Ⓜ️", i)
-        }
     }
     
-    
-    var inactiveQueue: DispatchQueue!
     func concurrentQueues() {
-        // let anotherQueue = DispatchQueue(label: "com.appcoda.anotherQueue", qos: .utility)
-        // let anotherQueue = DispatchQueue(label: "com.appcoda.anotherQueue", qos: .utility, attributes: .concurrent)
-        // let anotherQueue = DispatchQueue(label: "com.appcoda.anotherQueue", qos: .utility, attributes: .initiallyInactive)
-        let anotherQueue = DispatchQueue(label: "com.appcoda.anotherQueue", qos: .userInitiated, attributes: [.concurrent, .initiallyInactive])
-        inactiveQueue = anotherQueue
-        
-        anotherQueue.async {
-            for i in 0..<10 {
+        let anotherQueue = DispatchQueue(label: "com.appcoda.anotherQueue", qos: .default, attributes: .concurrent)
+        anotherQueue.sync {
+            for i in 0..<1000 {
+                
                 print("🔴", i)
-            }
-        }
-        
-        
-        anotherQueue.async {
-            for i in 100..<110 {
-                print("🔵", i)
-            }
-        }
-        
-        
-        anotherQueue.async {
-            for i in 1000..<1010 {
-                print("⚫️", i)
+                sleep(1)
+                
+                let anotherQueue1 = DispatchQueue(label: "com.appcoda.anotherQueue", qos: .default, attributes: .concurrent)
+                
+                anotherQueue1.sync {
+                    for i in 100..<110 {
+                        print("🔵", i)
+                        sleep(1)
+                    }
+                }
             }
         }
     }
-    
     
     func queueWithDelay() {
         let delayQueue = DispatchQueue(label: "com.appcoda.delayqueue", qos: .userInitiated)
-        
         print(Date())
         let additionalTime: DispatchTimeInterval = .seconds(2)
         
@@ -128,45 +147,58 @@ class ViewController: UIViewController {
         }
     }
     
-    
-    func fetchImage() {
-        let imageURL: URL = URL(string: "http://www.appcoda.com/wp-content/uploads/2015/12/blog-logo-dark-400.png")!
-        
-        (URLSession(configuration: URLSessionConfiguration.default)).dataTask(with: imageURL, completionHandler: { (imageData, response, error) in
-            
-            if let data = imageData {
-                print("Did download image data")
-                
-                DispatchQueue.main.async {
-                    self.imageView.image = UIImage(data: data)
-                }
-            }
-        }).resume()
-    }
-    
-    
     func useWorkItem() {
         var value = 10
-        
         let workItem = DispatchWorkItem {
             value += 5
         }
-        
         workItem.perform()
-        
         let queue = DispatchQueue.global(qos: .utility)
-        /*
-         queue.async {
-            workItem.perform()
-         }
-         */
-        
         queue.async(execute: workItem)
-        
-        
         workItem.notify(queue: DispatchQueue.main) {
             print("value = ", value)
         }
     }
+    
+    func dispatchGroupQueues() {
+        let anotherQueue = DispatchQueue(label: "com.appcoda.anotherQueue", qos: .utility, attributes: .concurrent)
+        let dispatchGroup = DispatchGroup()
+        var value = 0
+        
+        dispatchGroup.enter()
+        anotherQueue.async {
+            value += 1
+            dispatchGroup.leave()
+        }
+        
+        dispatchGroup.enter()
+        anotherQueue.async {
+            value += 1
+            dispatchGroup.leave()
+        }
+        
+        dispatchGroup.enter()
+        anotherQueue.async {
+            value += 1
+            dispatchGroup.leave()
+        }
+        
+        dispatchGroup.enter()
+        anotherQueue.async {
+            value += 1
+            dispatchGroup.leave()
+        }
+        
+        dispatchGroup.notify(queue: .main) {
+            print(value)
+        }
+    }
+    
+    func inactiveQueues() {
+        let queue = DispatchQueue(label: "initqueue", qos: .default, attributes: .initiallyInactive)
+        self.inactiveQueue = queue
+        queue.async {
+            print("do something")
+        }
+    }
 }
-
